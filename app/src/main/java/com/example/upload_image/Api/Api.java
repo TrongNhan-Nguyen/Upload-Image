@@ -24,7 +24,11 @@ public interface Api {
 
     @Multipart
     @POST("/upload/multi")
-    Call<String> uploadMulti(@Body RequestBody files);
+    Call<String> uploadMulti(
+            @Part("username") RequestBody username,
+            @Part("password") RequestBody password,
+            @Part List<MultipartBody.Part> multi
+            );
 
 
     @GET("/public/post")

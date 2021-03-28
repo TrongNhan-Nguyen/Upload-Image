@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
     private Api api;
     private String realPath = "";
     private List<String> imagesEncodedList;
-    String imageEncoded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         btn_multi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                uploadMulti();
             }
         });
         btn_submit.setOnClickListener(new View.OnClickListener() {
@@ -104,28 +104,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         imagesEncodedList = new ArrayList<>();
-        String[] filePathColumn = {MediaStore.Images.Media.DATA};
         if (requestCode == 1 && data.getData() != null) {
             Uri uri = data.getData();
             img_upload.setImageURI(uri);
             realPath = getPathFromUri(uri);
         } else if (requestCode == 1 && data.getClipData() != null) {
             ClipData mClipData = data.getClipData();
-            ArrayList<Uri> mArrayUri = new ArrayList<Uri>();
             for (int i = 0; i < mClipData.getItemCount(); i++) {
-
                 ClipData.Item item = mClipData.getItemAt(i);
                 Uri uri = item.getUri();
                 realPath = getPathFromUri(uri);
                 imagesEncodedList.add(realPath);
-//                mArrayUri.add(uri);
-//                Cursor cursor = getContentResolver().query(uri, filePathColumn, null, null, null);
-//                cursor.moveToFirst();
-//
-//                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-//                imageEncoded  = cursor.getString(columnIndex);
-//                imagesEncodedList.add(imageEncoded);
-//                cursor.close();
             }
             log("Selected Images" + imagesEncodedList.toString());
 
@@ -168,32 +157,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void uploadMulti() {
-//        List<File> fileList = new ArrayList<>();
-//        File file;
-//        for (int i =0; i < imagesEncodedList.size(); i++){
-//           file = new File(imagesEncodedList.get(i));
-//           fileList.add(file);
-//        }
-        MultipartBody.Builder builder = new MultipartBody.Builder();
-        builder.setType(MultipartBody.FORM);
+        List<MultipartBody.Part> imageList = new ArrayList<>();
         for (int i = 0; i < imagesEncodedList.size(); i++) {
             File file = new File(imagesEncodedList.get(i));
-            RequestBody requestBody = RequestBody.create(
-                    MediaType.parse("image/*"),
-                    file);
-            builder.addFormDataPart("uploaded_file", file.getName(), requestBody);
+            RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+            MultipartBody.Part singleImage = MultipartBody.Part.createFormData("multi", realPath, requestBody);
+            imageList.add(singleImage);
         }
-        MultipartBody requestBody = builder.build();
         RequestBody username = RequestBody.create(MediaType.parse("text/plain"), "Nguyen Trong Nhan");
         RequestBody password = RequestBody.create(MediaType.parse("text/plain"), "!@#sfdewfe(K:WNN");
-        Call<String> call = api.uploadSingle(requestBody);
+        Call<String> call = api.uploadMulti(username, password,imageList );
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.errorBody() == null) {
-                    log("successfully Upload Single");
+                    log("successfully Upload multi");
                 } else {
-                    log("failed Upload Single");
+                    log("failed Upload multi");
                     log(response.toString());
                 }
             }
@@ -206,7 +186,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
     private void testApi() {
         Call<String> call = api.getDataFromServer();
         call.enqueue(new Callback<String>() {
@@ -224,12 +203,7 @@ public class MainActivity extends AppCompatActivity {
                         log(responseData.toString());
                     }
 
-//                    JSONObject responseData = new JSONObject(response.body());
-//                    log(responseData.toString());
-//                    JSONObject user = responseData.getJSONObject("user");
-//                    JSONArray userList = responseData.getJSONArray("userList");
-//                    log(user.toString());
-//                    log(userList.toString());
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -241,7 +215,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
     private String getPathFromUri(Uri uri) {
         final String docId = DocumentsContract.getDocumentId(uri);
         final String[] split = docId.split(":");
@@ -272,6 +245,7 @@ public class MainActivity extends AppCompatActivity {
             cursor = this.getContentResolver().query(uri, projection, selection, selectionArgs,
                     null);
             if (cursor != null && cursor.moveToFirst()) {
+
                 final int index = cursor.getColumnIndexOrThrow(column);
                 return cursor.getString(index);
             }
@@ -294,7 +268,6 @@ public class MainActivity extends AppCompatActivity {
                     log("All permissions granted");
                 }
             }
-
             @Override
             public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
                 permissionToken.continuePermissionRequest();
