@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".TestServer">
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Login" />
+
+    <Button
+        android:id="@+id/btn_logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Logout" />
+
+    <Button
+        android:id="@+id/btn_refresh_token"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Refresh Token" />
+
+    <Button
+        android:id="@+id/btn_public_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Get data form public api" />
+
+    <Button
+        android:id="@+id/btn_auth_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Get data form auth api" />
+
+</LinearLayout>

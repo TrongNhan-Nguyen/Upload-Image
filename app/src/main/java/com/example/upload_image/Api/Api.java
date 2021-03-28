@@ -12,6 +12,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 
 public interface Api {
+    //TEST LOCAL
     @GET("/")
     Call<String> getData();
 
@@ -28,9 +29,11 @@ public interface Api {
             @Part("username") RequestBody username,
             @Part("password") RequestBody password,
             @Part List<MultipartBody.Part> multi
-            );
+    );
 
+    //TEST LOCAL
 
+    //TEST SERVER
     @GET("/public/post")
     Call<String> getDataFromServer();
 }
