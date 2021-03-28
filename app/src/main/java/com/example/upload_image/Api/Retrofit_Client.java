@@ -41,6 +41,8 @@ public class Retrofit_Client {
             .client(client)
             .build();
 
+    //     .baseUrl("http://10.0.2.2:3000")
     //     .baseUrl("http://ec2-18-223-15-195.us-east-2.compute.amazonaws.com:3000")
+
 
 }
