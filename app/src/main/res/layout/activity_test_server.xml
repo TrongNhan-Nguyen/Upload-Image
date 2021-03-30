@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".TestServer">
+
     <Button
         android:id="@+id/btn_login"
         android:layout_width="match_parent"
@@ -36,4 +37,15 @@
         android:layout_height="wrap_content"
         android:text="Get data form auth api" />
 
+    <ImageView
+        android:id="@+id/img_register"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_margin="8dp"
+        android:background="#BDFBE7" />
+    <Button
+        android:id="@+id/btn_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Register" />
 </LinearLayout>
